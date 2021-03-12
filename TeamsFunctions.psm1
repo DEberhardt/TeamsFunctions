@@ -74,7 +74,7 @@ if ((Get-StrictMode) -gt 0) {
   Write-Host "TeamsFunctions: Strict Mode interferes with Script execution. Switching Version to 'Latest'! - Please refer to https://github.com/DEberhardt/TeamsFunctions/issues/64 for details"
   Set-StrictMode -Version Latest
   #>
-  Write-Host 'TeamsFunctions: Strict Mode interferes with Script execution. Switching Strict Mode off - Please refer to https://github.com/DEberhardt/TeamsFunctions/issues/64 for details'
+  Write-Verbose 'TeamsFunctions: Strict Mode interferes with Script execution. Switching Strict Mode off - Please refer to https://github.com/DEberhardt/TeamsFunctions/issues/64 for details'
   Set-StrictMode -Off
 }
 

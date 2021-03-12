@@ -275,7 +275,7 @@ function New-TeamsAutoAttendantSchedule {
 
     # Creating Schedule
     Write-Verbose -Message '[PROCESS] Creating Schedule'
-    if ($PSBoundParameters.ContainsKey('Debug')) {
+    if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
       "Function: $($MyInvocation.MyCommand.Name): Parameters:", ($Parameters | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
     }
 

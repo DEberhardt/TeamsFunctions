@@ -251,7 +251,7 @@ function Set-TeamsCommonAreaPhone {
     try {
       #Trying to create the Common Area Phone
       Write-Verbose -Message "'$Name' Creating Common Area Phone with New-AzureAdUser..."
-      if ($PSBoundParameters.ContainsKey('Debug')) {
+      if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
         "Function: $($MyInvocation.MyCommand.Name) - Parameters", ($Parameters | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
       }
       if ($PSCmdlet.ShouldProcess("$UPN", 'Set-AzureAdUser')) {

@@ -105,6 +105,9 @@ function Connect-MeToTheO365Service {
         $ConnectionFeedback = switch ($Service) {
           'AzureAd' { Connect-AzureAD @ConnectionParameters }
           'MicrosoftTeams' {
+            #TEST new Module
+            Connect-MicrosoftTeams -ErrorAction Stop
+            <#
             # This catches two errors:
             # The browser based authentication dialog failed to complete. Reason: The download has failed (the connection was interrupted).
             # Integrated Windows Auth is not supported for managed users. See https://aka.ms/msal-net-iwa for details.
@@ -120,6 +123,7 @@ function Connect-MeToTheO365Service {
                 Connect-MicrosoftTeams @ConnectionParameters
               }
             }
+            #>
           }
           'ExchangeOnlineManagement' { Connect-ExchangeOnline @ConnectionParameters }
         }

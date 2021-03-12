@@ -206,6 +206,8 @@ function Get-TeamsUserLicense {
       $output = [PSCustomObject][ordered]@{
         UserPrincipalName        = $User
         DisplayName              = $DisplayName
+        #TEST Identity!
+        Identity                 = $UserObject.Identity
         UsageLocation            = $UserObject.UsageLocation
         Licenses                 = $LicensesProductNames
         ServicePlans             = $ServicePlansProductNames

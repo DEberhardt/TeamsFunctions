@@ -10,6 +10,7 @@ Pre-releases are documented here and will be transferred to VERSION.md monthly i
 
 ### Updated
 
+- `Get-TeamsUserLicense`: Now allows for piping the output to other CmdLets (Added AzureAdUser Identity)
 
 ---------------------------------------------
 

@@ -179,7 +179,7 @@ function Find-TeamsUserVoiceRoute {
         $EffectiveTDP = Get-CsEffectiveTenantDialPlan -Identity "$Id"
         $EffectiveTranslation = $EffectiveTDP | Test-CsEffectiveTenantDialPlan -DialedNumber "$DialedNumber"
 
-        if ($PSBoundParameters.ContainsKey('Debug')) {
+        if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
           "Function: $($MyInvocation.MyCommand.Name) - EffectiveTranslation", ( $EffectiveTranslation | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
         }
 
@@ -210,7 +210,7 @@ function Find-TeamsUserVoiceRoute {
           foreach ($OPU in $OPUs) {
             $VoiceRoutes += Get-CsOnlineVoiceRoute | Where-Object { $_.OnlinePstnUsages -contains $OPU } | Select-Object *, @{label = 'PSTNUsage'; Expression = { $OPU } }
           }
-          if ($PSBoundParameters.ContainsKey('Debug')) {
+          if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
             "Function: $($MyInvocation.MyCommand.Name) - VoiceRoutes", ( $VoiceRoutes | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
           }
 

@@ -5,7 +5,7 @@
 # Status:   Live
 
 
-#CHECK Documentation for Skype Online - Requirement for SfB Legacy admin is now gone?
+
 
 function Connect-Me {
   <#
@@ -139,9 +139,14 @@ function Connect-Me {
     Import-Module MicrosoftTeams -RequiredVersion 2.0.0 -Force -Global -Verbose:$false
     $global:VerbosePreference = $SaveVerbosePreference
 
-    if ( $AzureAdPreviewModule -and -not (Assert-Module AzureAdPreview )) {
-      if ( -not (Assert-Module AzureAd) ) {
-        throw 'Error importing Module: Neither AzureAd nor AzureAdPreview are available'
+    if ( $AzureAdPreviewModule ) {
+      Remove-Module AzureAd -Verbose:$false -ErrorAction SilentlyContinue
+      Import-Module AzureAdPreview -Force -Global -AllowClobber -Verbose:$false
+
+      if ( -not (Assert-Module AzureAdPreview )) {
+        if ( -not (Assert-Module AzureAd) ) {
+          throw 'Error importing Module: Neither AzureAd nor AzureAdPreview are available'
+        }
       }
     }
 
@@ -159,16 +164,14 @@ function Connect-Me {
     }
     #endregion
 
-    $MeToTheO365ServiceParams = $null
-    $MeToTheO365ServiceParams += @{ 'AccountId' = $AccountId }
-    $MeToTheO365ServiceParams += @{ 'Service' = '' }
-    $MeToTheO365ServiceParams += @{ 'ErrorAction' = 'Stop' }
+    $ConnectionParameters = $null
+    $ConnectionParameters += @{ 'ErrorAction' = 'Stop' }
 
     if ($PSBoundParameters.ContainsKey('Verbose')) {
-      $MeToTheO365ServiceParams += @{ 'Verbose' = $true }
+      $ConnectionParameters += @{ 'Verbose' = $true }
     }
-    if ($PSBoundParameters.ContainsKey('Debug')) {
-      $MeToTheO365ServiceParams += @{ 'Debug' = $true }
+    if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
+      $ConnectionParameters += @{ 'Debug' = $true }
     }
 
   } #begin
@@ -193,7 +196,11 @@ function Connect-Me {
       try {
         switch ($Connection) {
           'AzureAd' {
-            $AzureAdFeedback = Connect-MeToTheO365Service @MeToTheO365ServiceParams
+            $AzureAdParameters = $ConnectionParameters
+            $AzureAdParameters += @{ 'AccountId' = $AccountId }
+            $AzureAdFeedback = Connect-AzureAD @AzureAdParameters
+            #$AzureAdFeedback = Connect-MeToTheO365Service @MeToTheO365ServiceParams
+
             #region Activating Admin Roles
             if ( $PIMavailable ) {
               $step++
@@ -216,10 +223,24 @@ function Connect-Me {
             }
           }
           'MicrosoftTeams' {
-            $MicrosoftTeamsFeedback = Connect-MeToTheO365Service @MeToTheO365ServiceParams
+            $MicrosoftTeamsParameters = $ConnectionParameters
+
+            try {
+              $MicrosoftTeamsFeedback = Connect-MicrosoftTeams @MicrosoftTeamsParameters
+            }
+            catch {
+              #$MicrosoftTeamsFeedback = Connect-MeToTheO365Service @MeToTheO365ServiceParams
+              $MicrosoftTeamsFeedback = Connect-MicrosoftTeams
+            }
           }
           'ExchangeOnline' {
-            $ExchangeOnlineFeedback = Connect-MeToTheO365Service -AccountId $AccountId -Service $Service -ErrorAction Stop
+            $ExchangeOnlineParameters = $ConnectionParameters
+            $ExchangeOnlineParameters += @{ 'UserPrincipalName' = $AccountId }
+            $ExchangeOnlineParameters += @{ 'ShowProgress' = $true }
+            $ExchangeOnlineParameters += @{ 'ShowBanner' = $false }
+
+            $ExchangeOnlineFeedback = Connect-ExchangeOnline @ExchangeOnlineParameters
+            #$ExchangeOnlineFeedback = Connect-MeToTheO365Service -AccountId $AccountId -Service $Service -ErrorAction Stop
           }
         }
       }
@@ -268,7 +289,7 @@ function Connect-Me {
       if ( Test-ExchangeOnlineConnection ) {
         $SessionInfo.ConnectedTo += 'ExchangeOnline'
         #What to add?
-        if ($PSBoundParameters.ContainsKey('Debug')) {
+        if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
           "Function: $($MyInvocation.MyCommand.Name): ExchangeOnlineFeedback:", ($ExchangeOnlineFeedback | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
         }
       }
@@ -287,7 +308,7 @@ function Connect-Me {
           }
           else {
             #$Roles = $(Get-AzureAdAssignedAdminRoles (Get-AzureADCurrentSessionInfo).Account).DisplayName -join ', '
-            Write-Warning -Message "Module AzureAdPreview not present. Admin Roles cannot be enumerated."
+            Write-Warning -Message 'Module AzureAdPreview not present. Admin Roles cannot be enumerated.'
           }
           $SessionInfo.AdminRoles = $Roles
         }

@@ -52,22 +52,28 @@ function Assert-MicrosoftTeamsConnection {
           return $(if ($Called) { $true })
         }
         else {
-          Write-Host '[ASSERT] ERROR: You must call the Connect-MicrosoftTeams cmdlet before calling any other cmdlets. (Connect-Me can be used for multiple connections) ' -ForegroundColor Red
-          return $(if ($Called) { $false })
+          throw "Reconnect failed"
         }
       }
       catch {
-        if ($PSBoundParameters.ContainsKey('Debug')) {
+        if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
           "Function: $($MyInvocation.MyCommand.Name) - Exception message", ( $_.Exception.Message | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
         }
         if (Test-AzureADConnection) {
           $AzureAdFeedback = Get-AzureADCurrentSessionInfo
           Write-Host '[ASSERT] ERROR: Reconnect unsuccessful. Trying to disconnect and reconnect you. Please validate your Admin roles, disconnect and reconnect' -ForegroundColor Red
-          Disconnect-Me
-          Connect-Me -AccountId $($AzureAdFeedback.Account) -NoFeedback
+          try {
+            Disconnect-Me
+            Connect-Me -AccountId $($AzureAdFeedback.Account) -NoFeedback
+            return $(if ($Called) { $true })
+          }
+          catch {
+            return $(if ($Called) { $false })
+          }
         }
         else {
           Write-Host '[ASSERT] ERROR: Reconnect unsuccessful. Connect-MicrosoftTeams failed and no Session to AzureAd exists. Please validate your Admin roles, disconnect and reconnect' -ForegroundColor Red
+          return $(if ($Called) { $false })
         }
         <# Commented out to avoid having two authentication popups
         else {

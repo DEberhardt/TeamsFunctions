@@ -100,7 +100,7 @@ function New-TeamsAutoAttendantDialScope {
 
     # Create dial Scope
     Write-Verbose -Message '[PROCESS] Creating Dial Scope'
-    if ($PSBoundParameters.ContainsKey('Debug')) {
+    if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
       Write-Debug "$groupIds"
     }
 

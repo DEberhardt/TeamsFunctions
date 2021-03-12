@@ -5,8 +5,8 @@
 # Status:   Live
 
 
-#CHECK ToString manipulation. Evaluate better display: , to Line feed ; Reordering of objects (Menu Option: DtmfResponse, VoiceResponse, Action, Call Target)
-# Add TimeZone to main output (UTC+/-) and detailed output
+#IMPROVE? Evaluate better display: ToString manipulation. , to Line feed ; Reordering of objects (Menu Option: DtmfResponse, VoiceResponse, Action, Call Target)
+#  Add TimeZone to main output (UTC+/-) and detailed output
 function New-TeamsAutoAttendant {
   <#
 	.SYNOPSIS
@@ -814,7 +814,7 @@ function New-TeamsAutoAttendant {
 
     #region ACTION
     Write-Verbose -Message '[PROCESS] Creating Auto Attendant'
-    if ($PSBoundParameters.ContainsKey('Debug')) {
+    if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
       "Function: $($MyInvocation.MyCommand.Name): Parameters:", ($Parameters | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
     }
 

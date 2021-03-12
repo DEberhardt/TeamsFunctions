@@ -39,10 +39,8 @@ Activating Admin Roles made easier. Please note that Privileged Access Groups ar
 | Function                                                                      | Description                                                                                   |
 | -----------------------------------------------------------------------------: | --------------------------------------------------------------------------------------------- |
 | [`Assert-AzureAdConnection`](../docs/Assert-AzureAdConnection.md)               | Tests connection and visual feedback in the Verbose stream if called directly.                |
-| [`Assert-MicrosoftTeamsConnection`](../docs/Assert-MicrosoftTeamsConnection.md) | Tests connection and visual feedback in the Verbose stream if called directly.                |
-| [`Assert-SkypeOnlineConnection`](../docs/Assert-SkypeOnlineConnection.md)       | Tests connection and **Attempts to reconnect** a timed-out session. Alias `PoL` *Ping-of-life* |
+| [`Assert-MicrosoftTeamsConnection`](../docs/Assert-MicrosoftTeamsConnection.md) | Tests connection and **Attempts to reconnect** a timed-out session. Alias `PoL` *Ping-of-life*                |
 | [`Test-AzureAdConnection`](../docs/Test-AzureAdConnection.md)                   | Verifying a Session to AzureAD exists                                                         |
-| [`Test-MicrosoftTeamsConnection`](../docs/Test-MicrosoftTeamsConnection.md)     | Verifying a Session to MicrosoftTeams exists                                                  |
 | [`Test-SkypeOnlineConnection`](../docs/Test-SkypeOnlineConnection.md)           | Verifying a Session to SkypeOnline exists                                                     |
 | [`Test-ExchangeOnlineConnection`](../docs/Test-ExchangeOnlineConnection.md)     | Verifying a Session to ExchangeOnline exists                                                  |
 
@@ -50,25 +48,18 @@ The Assert cmdlets are nested in all Scripts to ensure sessions are created and 
 
 ## EXAMPLES
 
-### Example 1 - Connecting to SkypeOnline
+### Example 1 - Connecting to AzureAd, MicrosoftTeams
 
 ````powershell
-Connect-SkypeOnline [-AccountId] John@domain.com
-# Establishes a session to SkypeOnline (aka the Teams BackEnd).
-# If connected to AzureAd already, will read the TenantDomain and use it as an OverrideAdminDomain
-
-Connect-SkypeOnline [-AccountId] John@domain.com [-OverrideAdminDomain domain.onmicrosoft.com]
-# Establishes a session to SkypeOnline (aka the Teams BackEnd).
-# The Override Admin Domain is optional and only needed for Hybrid Scenarios where the DNS entries point to the Skype OnPrem Platform.
-# If connected to AzureAd already, the provided Domain will take precedence.
+Connect-Me [-AccountId] John@domain.com
+# Establishes a session to AzureAd, enables Admin Roles (with AzureAdPreview), Connects to MicrosoftTeams
 ````
 
-### Example 2 - Connecting to AzureAd, MicrosoftTeams and SkypeOnline
+### Example 2 - Connecting to AzureAd, MicrosoftTeams and ExchangeOnline
 
 ````powershell
-Connect-Me [-AccountId] John@domain.com [-OverrideAdminDomain domain.onmicrosoft.com]
-# Establishes a session to AzureAd, enables Admin Roles, Connects to MicrosoftTeams and SkypeOnline
-# NOTE: The Override Admin Domain is usually not required as it can be read from AzureAd
+Connect-Me [-AccountId] John@domain.com -Exchange
+# Establishes a session to AzureAd, enables Admin Roles (with AzureAdPreview), Connects to MicrosoftTeams and ExchangeOnline
 ````
 
 ## NOTE
@@ -96,7 +87,8 @@ The Session can also currently not be reconnected to, a credential Dialog is sho
 
 ## SEE ALSO
 
-- [`New-CsOnlineSession`](https://docs.microsoft.com/en-us/powershell/module/skype/new-csonlinesession?view=skype-ps)
+- [`Connect-AzureAd`](https://docs.microsoft.com/en-us/powershell/module/azureAd/connect-azuread)
+- [`Connect-microsoftteams`](https://docs.microsoft.com/en-us/powershell/module/teams/connect-microsoftteams?view=teams-ps)
 
 ## KEYWORDS
 

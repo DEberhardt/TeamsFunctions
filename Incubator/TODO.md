@@ -33,7 +33,7 @@
 
 - [x] New-CsOnlineSession does not have -Username anymore. Test MFA with Credential instead (also interoperability with Connect-Me/AzureAD and MicrosoftTeams)
 - [x] Rework Connect-SkypeOnline to use MicrosoftTeams
-- [ ] Evaluate missing SSO (Authentication once, selection of Account still there)
+- [x] Evaluate missing SSO (Authentication once, selection of Account still there)
 - [x] Remove SkypeOnlineConnector
 
 ## TeamsAutoAttendant

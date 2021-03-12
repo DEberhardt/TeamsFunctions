@@ -90,12 +90,14 @@ function Verb-Noun {
       #FIXIT  Same as Fixme
       #FIX    Same as Fixme
       #CHECK  White on BLUE, text only, TBD, gutter
-      #TEST   White on PURPLE, text only, TBD, gutter
+      #TEST   White on CYAN, text only, TBD, gutter
       #VALIDATE   Same as Test
       #IMPROVE  Check performance
       #DOC    White on GREY?, text only, SHEET?
       #WRITE  Same as DOC
       #NOTE   Same as DOC?
+      [ ] Open task
+      [x] Closed task
 
     } #foreach Identity
 

@@ -327,7 +327,7 @@ function Enable-AzureAdAdminRole {
             }
 
             #Activating the Role
-            if ($PSBoundParameters.ContainsKey('Debug')) {
+            if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
               "Function: $($MyInvocation.MyCommand.Name) - Parameters for Open-AzureADMSPrivilegedRoleAssignmentRequest", ( $Parameters | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
             }
 

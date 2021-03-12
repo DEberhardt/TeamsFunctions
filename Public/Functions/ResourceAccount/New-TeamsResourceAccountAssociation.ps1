@@ -5,8 +5,8 @@
 # Status:   Live
 
 
-#TODO: Doesn't stop if AA or RA are not found! - Check!
-#TODO: Displayname is not normalised - can lead to inconsistencies - it shouldn't need to, so needs a warning - if not found, try normalising!
+
+
 function New-TeamsResourceAccountAssociation {
   <#
 	.SYNOPSIS
@@ -130,6 +130,7 @@ function New-TeamsResourceAccountAssociation {
       #Write-Error -Message "Cannot determine $DesiredType '$Entity'" -ErrorAction Stop
     }
     if ($EntitySearch.Count -gt 1) {
+      #NOTE Displayname is not normalised - can lead to inconsistencies - it shouldn't need to, so needs a warning - if not found, try normalising!
       $EntityObject = $EntitySearch | Where-Object Name -EQ "$Entity"
     }
     else {
@@ -169,6 +170,7 @@ function New-TeamsResourceAccountAssociation {
     $step++
     Write-Progress -Id 0 -Status $Status -CurrentOperation $Operation -Activity $MyInvocation.MyCommand -PercentComplete ($step / $sMax * 100)
     Write-Verbose -Message "$Status - $Operation"
+    #TEST If AA or RA are not found, should not throw multiple errors, but skip this Entity or RA
     foreach ($UPN in $UserPrincipalName) {
       Write-Verbose -Message "Querying Resource Account '$UPN'"
       try {
@@ -308,7 +310,7 @@ function New-TeamsResourceAccountAssociation {
 
         # Create CsAutoAttendantCallableEntity
         Write-Verbose -Message '[PROCESS] Creating Resource Account Association'
-        if ($PSBoundParameters.ContainsKey('Debug')) {
+        if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
           "Function: $($MyInvocation.MyCommand.Name): Parameters:", ($Parameters | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
         }
 

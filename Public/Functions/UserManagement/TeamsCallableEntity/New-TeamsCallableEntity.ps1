@@ -168,7 +168,7 @@ function New-TeamsCallableEntity {
 
     # Create CsAutoAttendantCallableEntity
     Write-Verbose -Message '[PROCESS] Creating Callable Entity'
-    if ($PSBoundParameters.ContainsKey('Debug')) {
+    if ($PSBoundParameters.ContainsKey('Debug') -or $DebugPreference -eq 'Continue') {
       "Function: $($MyInvocation.MyCommand.Name): Parameters:", ($Parameters | Format-Table -AutoSize | Out-String).Trim() | Write-Debug
     }
 
